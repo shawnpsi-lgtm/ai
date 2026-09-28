@@ -25,7 +25,8 @@
       align-content: center;
       gap: 18px;
       min-height: 100svh;
-      background: #111113;
+      /* Still fallback, like the homepage: shows until the video is actually playing. */
+      background: #111113 url(https://shawnsingh.me/poster.jpg) center / cover fixed;
       color: #fff;
       font-family: var(--sans);
     }
@@ -41,7 +42,10 @@
       border: 0;
       pointer-events: none;
       z-index: 0;
+      opacity: 0;
+      transition: opacity .6s ease;
     }
+    body.playing .bg { opacity: 1; }
     h1, #chat, #connect { position: relative; z-index: 1; }
     h1 {
       margin: 0;
@@ -158,7 +162,17 @@
 </head>
 <body>
   <iframe class="bg" title="" tabindex="-1" allow="autoplay; fullscreen; picture-in-picture"></iframe>
-  <script>document.querySelector('.bg').src = 'https://player.vimeo.com/video/' + vids[0] + '?badge=0&autopause=0&background=1&autoplay=1&loop=1&muted=1';</script>
+  <script>document.querySelector('.bg').src = 'https://player.vimeo.com/video/' + vids[0] + '?badge=0&autopause=0&background=1&autoplay=1&loop=1&muted=1';
+    // Fade the video in on its first frame; until then (or if Vimeo never loads) the poster shows.
+    addEventListener('message', e => {
+      const f = document.querySelector('.bg');
+      if (e.origin !== 'https://player.vimeo.com' || e.source !== f.contentWindow) return;
+      let d = e.data;
+      try { if (typeof d === 'string') d = JSON.parse(d); } catch { return; }
+      if (d.event === 'ready') f.contentWindow.postMessage({ method: 'addEventListener', value: 'timeupdate' }, 'https://player.vimeo.com');
+      else if (d.event === 'timeupdate') document.body.classList.add('playing');
+    });
+  </script>
 
   <h1>Shawn AI</h1>
   <form id="chat" autocomplete="off">
