@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#111113" />
+  <title>Shawn AI</title>
+  <meta name="description" content="Ask Shawn AI about Shawn Singh." />
+  <link rel="canonical" href="https://ai.shawnsingh.me/" />
+  <link rel="icon" type="image/svg+xml" href="https://shawnsingh.me/shawnlogo.svg" />
+  <script>window.vids=[1177562440,1230574544,1230573930].sort(()=>Math.random()-.5);</script>
+  <style>
+    :root {
+      --accent: #0071e3;
+      --accent-hover: #0077ed;
+      --black: #f5f5f7;
+      --bg-off: #1c1c1e;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      display: grid;
+      place-items: center;
+      align-content: center;
+      gap: 18px;
+      min-height: 100svh;
+      background: #111113;
+      color: #fff;
+      font-family: var(--sans);
+    }
+    .bg {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 100vw;
+      height: 56.25vw;
+      min-height: 100%;
+      min-width: 177.78vh;
+      transform: translate(-50%, -50%);
+      border: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    h1, #chat, #connect { position: relative; z-index: 1; }
+    h1 {
+      margin: 0;
+      font: 600 clamp(2rem, 6vw, 3.25rem)/1.1 var(--sans);
+      letter-spacing: -.02em;
+      text-shadow: 0 2px 18px rgb(0 0 0 / .45);
+    }
+    h1::after {
+      content: "";
+      display: inline-block;
+      width: .06em;
+      height: .9em;
+      margin-left: .1em;
+      vertical-align: -.09em;
+      background: currentColor;
+      animation: caret 1.1s step-end infinite;
+    }
+    @keyframes caret { 50% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      h1::after { animation: none; }
+    }
+    #chat {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      width: min(620px, calc(100vw - 32px));
+      margin: 0;
+      padding: 12px;
+      font: 1rem/1.5 var(--sans);
+      color: var(--black);
+      border: 1px solid rgb(255 255 255 / .12);
+      border-radius: 26px;
+      background: color-mix(in srgb, var(--bg-off) 55%, transparent);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      backdrop-filter: blur(16px) saturate(180%);
+      box-shadow:
+        0 1px 2px rgb(0 0 0 / .4),
+        0 10px 28px rgb(0 0 0 / .35),
+        inset 0 1px 0 rgb(255 255 255 / .08);
+    }
+    #chat-log {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 42svh;
+      overflow-y: auto;
+      padding: 4px 4px 0;
+      overscroll-behavior: contain;
+    }
+    #chat-log:empty { display: none; }
+    #chat-log p {
+      max-width: 82%;
+      margin: 0;
+      padding: 8px 13px;
+      border-radius: 18px;
+      white-space: pre-wrap;
+      color: var(--black);
+      background: color-mix(in srgb, var(--bg-off) 70%, transparent);
+    }
+    #chat-log .me { align-self: flex-end; color: #fff; background: var(--accent); }
+    #chat-log ul { margin: 6px 0; padding-left: 18px; white-space: normal; }
+    #chat-log li + li { margin-top: 6px; }
+    #chat-log li::marker { color: var(--accent); }
+    #chat-log a {
+      display: inline-block;
+      padding: 1px 10px;
+      border-radius: 980px;
+      color: var(--accent);
+      background: color-mix(in srgb, var(--accent) 14%, transparent);
+      font-weight: 500;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    #chat-log a:hover { background: color-mix(in srgb, var(--accent) 24%, transparent); }
+    #chat-log .err { color: #ffb4ab; background: color-mix(in srgb, #ffb4ab 12%, transparent); }
+    #chat-input {
+      min-width: 0;
+      padding: 10px 14px;
+      font: inherit;
+      color: inherit;
+      border: 1px solid rgb(255 255 255 / .12);
+      border-radius: 980px;
+      background: color-mix(in srgb, var(--bg-off) 70%, transparent);
+    }
+    #chat-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+    #chat button {
+      display: grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      border: 0;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+    }
+    #chat button:hover { background: var(--accent-hover); }
+    #connect { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: min(620px, calc(100vw - 32px)); }
+    #connect button, #connect a {
+      text-decoration: none;
+      padding: 8px 16px;
+      font: 500 .875rem/1 var(--sans);
+      color: #fff;
+      border: 1px solid rgb(255 255 255 / .25);
+      border-radius: 980px;
+      background: rgb(0 0 0 / .25);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+    }
+    #connect button:hover, #connect a:hover { background: rgb(0 0 0 / .4); }
+  </style>
+</head>
+<body>
+  <iframe class="bg" title="" tabindex="-1" allow="autoplay; fullscreen; picture-in-picture"></iframe>
+  <script>document.querySelector('.bg').src = 'https://player.vimeo.com/video/' + vids[0] + '?badge=0&autopause=0&background=1&autoplay=1&loop=1&muted=1';</script>
+
+  <h1>Shawn AI</h1>
+  <form id="chat" autocomplete="off">
+    <div id="chat-log" aria-live="polite"></div>
+    <input id="chat-input" placeholder="Ask me anything about Shawn…" aria-label="Message" />
+    <button type="submit" aria-label="Send">
+      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+           stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 19V5"/><path d="M5.5 11.5 12 5l6.5 6.5"/>
+      </svg>
+    </button>
+  </form>
+  <div id="connect">
+    <a href="https://shawnsingh.me/">shawnsingh.me</a>
+    <button type="button" data-url="https://groq-chat.shawnpsi.workers.dev/mcp" data-done="Copied MCP URL">Connect MCP</button>
+    <button type="button" data-url="https://groq-chat.shawnpsi.workers.dev/api?q=" data-done="Copied API URL">Get API</button>
+    <a href="https://shawnsingh.me/api.html">Docs</a>
+    <a href="https://shawnsingh.me/status.html">Status</a>
+  </div>
+  <script src="chat.js"></script>
+</body>
+</html>
